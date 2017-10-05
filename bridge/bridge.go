@@ -298,6 +298,12 @@ func (b *Bridge) newService(port ServicePort, isgroup bool) *Service {
 		p, _ = strconv.Atoi(port.HostPort)
 	}
 	service.Port = p
+	for _, requiredEnv := range container.Config.Env {
+		if strings.Contains(strings.ToLower(requiredEnv),"internal_ip=") {
+				log.Println("Found 'internal_ip' variable, will use " + port.ExposedIP)
+				service.IP = port.ExposedIP
+		}
+	}
 
 	if b.config.UseIpFromLabel != "" {
 		containerIp := container.Config.Labels[b.config.UseIpFromLabel]
