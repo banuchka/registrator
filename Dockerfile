@@ -13,6 +13,6 @@ RUN apk --no-cache add -t build-deps build-base go git \
 	&& cd /go/src/github.com/gliderlabs/registrator \
   && git config --global http.https://gopkg.in.followRedirects true \
 	&& go get \
-	&& go build -ldflags "-X main.Version=$(cat VERSION)" -o /bin/registrator \
+  && CGO_ENABLED=0 GOOS=linux go build -a -ldflags "-extldflags '-static' -X main.Version=$(cat VERSION)" -o /bin/registrator \ 
 	&& rm -rf /go \
 	&& apk del --purge build-deps
