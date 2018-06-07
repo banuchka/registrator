@@ -242,7 +242,7 @@ func (b *Bridge) add(containerId string, quiet bool) {
 			continue
 		}
 		b.services[container.ID] = append(b.services[container.ID], service)
-		log.Println("added:", container.ID[:12], service.ID)
+		log.Println("added:", container.ID[:12], service.ID, service)
 	}
 }
 
@@ -269,6 +269,20 @@ func (b *Bridge) newService(port ServicePort, isgroup bool) *Service {
 	metadata, metadataFromPort := serviceMetaData(container.Config, port.ExposedPort)
 
 	ignore := mapDefault(metadata, "ignore", "")
+  if b.config.Macvlanip {
+	networkMode := container.HostConfig.NetworkMode
+	if networkMode != "" && networkMode != "host" && networkMode != "bridge" {
+     ip := container.NetworkSettings.Networks[networkMode].IPAddress 
+     service := new(Service)
+	   service.ID = ip
+     service.Name = "macvlan"
+     service.IP = port.HostIP
+     log.Println(service.Name+": using network container IP " + ip )
+     return service
+	}else{
+      return nil
+  }
+  }
 	if ignore != "" {
 		return nil
 	}
