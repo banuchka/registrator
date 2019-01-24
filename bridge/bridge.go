@@ -269,6 +269,26 @@ func (b *Bridge) newService(port ServicePort, isgroup bool) *Service {
 	metadata, metadataFromPort := serviceMetaData(container.Config, port.ExposedPort)
 
 	ignore := mapDefault(metadata, "ignore", "")
+  if b.config.Macvlanip {
+      var ip string
+      for _, network := range container.NetworkSettings.Networks {
+          if strings.HasPrefix(network.IPAddress, "10.") {
+              ip = network.IPAddress
+          }
+      }
+      networkMode := container.HostConfig.NetworkMode
+      if networkMode != "" && networkMode != "host" && networkMode != "bridge" {
+      //    ip := container.NetworkSettings.Networks[networkMode].IPAddress
+          service := new(Service)
+          service.ID = ip
+          service.Name = "macvlan"
+          service.IP = port.HostIP
+          log.Println(service.Name+": using network container IP " + ip )
+          return service
+      } else {
+          return nil
+      }
+  }
 	if ignore != "" {
 		return nil
 	}
@@ -298,6 +318,23 @@ func (b *Bridge) newService(port ServicePort, isgroup bool) *Service {
 		p, _ = strconv.Atoi(port.HostPort)
 	}
 	service.Port = p
+  for _, requiredEnv := range container.Config.Env {
+      if strings.Contains(strings.ToLower(requiredEnv),"internal_ip=") {
+          if strings.HasPrefix(port.ExposedIP, "10.") {
+              log.Println("Found 'internal_ip' variable, will use " + port.ExposedIP)
+              service.IP = port.ExposedIP
+          } else {
+              var ip string
+              for _, network := range container.NetworkSettings.Networks {
+                  if strings.HasPrefix(network.IPAddress, "10.") {
+                      ip = network.IPAddress
+                  }
+              }
+              log.Println("Found 'internal_ip' variable, will use " + ip)
+              service.IP = ip
+          }
+      }
+  }
 
 	if b.config.UseIpFromLabel != "" {
 		containerIp := container.Config.Labels[b.config.UseIpFromLabel]

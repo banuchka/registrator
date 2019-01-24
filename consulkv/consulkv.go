@@ -2,9 +2,7 @@ package consul
 
 import (
 	"log"
-	"net"
 	"net/url"
-	"strconv"
 	"strings"
 
 	"github.com/gliderlabs/registrator/bridge"
@@ -55,8 +53,8 @@ func (r *ConsulKVAdapter) Ping() error {
 func (r *ConsulKVAdapter) Register(service *bridge.Service) error {
 	log.Println("Register")
 	path := r.path[1:] + "/" + service.Name + "/" + service.ID
-	port := strconv.Itoa(service.Port)
-	addr := net.JoinHostPort(service.IP, port)
+//	port := strconv.Itoa(service.Port)
+	addr := service.IP
 	log.Printf("path: %s", path)
 	_, err := r.client.KV().Put(&consulapi.KVPair{Key: path, Value: []byte(addr)}, nil)
 	if err != nil {

@@ -11,6 +11,7 @@ import (
 	"github.com/gliderlabs/registrator/bridge"
 	consulapi "github.com/hashicorp/consul/api"
 	"github.com/hashicorp/go-cleanhttp"
+  mgutzstr "github.com/mgutz/str"
 )
 
 const DefaultInterval = "10s"
@@ -22,10 +23,11 @@ func init() {
 	bridge.Register(f, "consul-unix")
 }
 
-func (r *ConsulAdapter) interpolateService(script string, service *bridge.Service) string {
+func (r *ConsulAdapter) interpolateService(script string, service *bridge.Service) []string {
 	withIp := strings.Replace(script, "$SERVICE_IP", service.IP, -1)
 	withPort := strings.Replace(withIp, "$SERVICE_PORT", strconv.Itoa(service.Port), -1)
-	return withPort
+  stringArgs := mgutzstr.ToArgv(withPort)
+  return stringArgs
 }
 
 type Factory struct{}
@@ -107,7 +109,7 @@ func (r *ConsulAdapter) buildCheck(service *bridge.Service) *consulapi.AgentServ
 	} else if cmd := service.Attrs["check_cmd"]; cmd != "" {
 		check.Args = strings.Split(fmt.Sprintf("check-cmd %s %s %s", service.Origin.ContainerID[:12], service.Origin.ExposedPort, cmd), " ")
 	} else if script := service.Attrs["check_script"]; script != "" {
-		check.Args = strings.Split(r.interpolateService(script, service), " ")
+		check.Args = r.interpolateService(script, service)
 	} else if ttl := service.Attrs["check_ttl"]; ttl != "" {
 		check.TTL = ttl
 	} else if tcp := service.Attrs["check_tcp"]; tcp != "" {
