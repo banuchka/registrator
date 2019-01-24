@@ -272,7 +272,7 @@ func (b *Bridge) newService(port ServicePort, isgroup bool) *Service {
   if b.config.Macvlanip {
       var ip string
       for _, network := range container.NetworkSettings.Networks {
-          if strings.HasPrefix(network.IPAddress, "10.") {
+          if !(strings.HasPrefix(network.IPAddress, "172.")) {
               ip = network.IPAddress
           }
       }
@@ -320,7 +320,7 @@ func (b *Bridge) newService(port ServicePort, isgroup bool) *Service {
 	service.Port = p
   for _, requiredEnv := range container.Config.Env {
       if strings.Contains(strings.ToLower(requiredEnv),"internal_ip=") {
-          if strings.HasPrefix(port.ExposedIP, "10.") {
+          if !(strings.HasPrefix(port.ExposedIP, "172.")) {
               log.Println("Found 'internal_ip' variable, will use " + port.ExposedIP)
               service.IP = port.ExposedIP
           } else {
