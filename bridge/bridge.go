@@ -326,7 +326,7 @@ func (b *Bridge) newService(port ServicePort, isgroup bool) *Service {
           } else {
               var ip string
               for _, network := range container.NetworkSettings.Networks {
-                  if strings.HasPrefix(network.IPAddress, "10.") {
+                  if !(strings.HasPrefix(network.IPAddress, "172.")) {
                       ip = network.IPAddress
                   }
               }
