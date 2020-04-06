@@ -51,7 +51,7 @@ func (r *ConsulKVAdapter) Ping() error {
 }
 
 func (r *ConsulKVAdapter) Register(service *bridge.Service) error {
-	log.Println("Register")
+	log.Println("Register Consul KV")
 	path := r.path[1:] + "/" + service.Name + "/" + service.ID
 //	port := strconv.Itoa(service.Port)
 	addr := service.IP

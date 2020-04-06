@@ -13,6 +13,7 @@ import (
 	"sync"
 
 	dockerapi "github.com/fsouza/go-dockerclient"
+  consulapi "github.com/hashicorp/consul/api"
 )
 
 var serviceIDPattern = regexp.MustCompile(`^(.+?):([a-zA-Z0-9][a-zA-Z0-9_.-]+):[0-9]+(?::udp)?$`)
@@ -321,16 +322,36 @@ func (b *Bridge) newService(port ServicePort, isgroup bool) *Service {
   for _, requiredEnv := range container.Config.Env {
       if strings.Contains(strings.ToLower(requiredEnv),"internal_ip=") {
           if !(strings.HasPrefix(port.ExposedIP, "172.")) {
-              log.Println("Found 'internal_ip' variable, will use " + port.ExposedIP)
+              log.Println("Found #1 'internal_ip' variable, will use " + port.ExposedIP)
               service.IP = port.ExposedIP
+              var ip_v6 string
+              for _, network := range container.NetworkSettings.Networks {
+                ip_v6 = network.GlobalIPv6Address
+              }
+              serviceIP_v6 := net.ParseIP(ip_v6)
+              if (serviceIP_v6 != nil && serviceIP_v6.To4() == nil) {
+                serviceAddressIs6 := serviceIP_v6
+                service.TaggedAddresses = make(map[string]consulapi.ServiceAddress)
+                service.TaggedAddresses["registrator_ipv6"] = consulapi.ServiceAddress{Address: serviceAddressIs6.String(), Port: service.Port, }
+                log.Println("Found #1 IPv6 address, will use " + serviceAddressIs6.String())
+              }
           } else {
               var ip string
+              var ip_v6 string
               for _, network := range container.NetworkSettings.Networks {
                   if !(strings.HasPrefix(network.IPAddress, "172.")) {
                       ip = network.IPAddress
                   }
+                  ip_v6 = network.GlobalIPv6Address
               }
-              log.Println("Found 'internal_ip' variable, will use " + ip)
+              serviceIP_v6 := net.ParseIP(ip_v6)
+              if (serviceIP_v6 != nil && serviceIP_v6.To4() == nil) {
+                serviceAddressIs6 := serviceIP_v6
+                service.TaggedAddresses = make(map[string]consulapi.ServiceAddress)
+                service.TaggedAddresses["registrator_ipv6"] = consulapi.ServiceAddress{Address: serviceAddressIs6.String(), Port: service.Port, }
+                log.Println("Found #2 IPv6 address, will use " + serviceAddressIs6.String())
+              }
+              log.Println("Found #2 'internal_ip' variable, will use " + ip)
               service.IP = ip
           }
       }

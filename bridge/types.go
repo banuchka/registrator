@@ -5,6 +5,7 @@ import (
 	"net/url"
 
 	dockerapi "github.com/fsouza/go-dockerclient"
+  consulapi "github.com/hashicorp/consul/api"
 )
 
 type AdapterFactory interface {
@@ -40,6 +41,8 @@ type Service struct {
 	Tags  []string
 	Attrs map[string]string
 	TTL   int
+  TaggedAddresses map[string]consulapi.ServiceAddress
+  Meta map[string]string
 
 	Origin ServicePort
 }

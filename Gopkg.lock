@@ -113,6 +113,14 @@
   revision = "0ae9b6f38f24f65567d4b46602502b33c95cf57a"
 
 [[projects]]
+  digest = "1:bde2a1ce1de28312f165a88926c12f4acd19dc4d7da96a445dfa5a29eae07a93"
+  name = "github.com/fatih/color"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "daf2830f2741ebb735b21709a520c5f37d642d85"
+  version = "v1.9.0"
+
+[[projects]]
   digest = "1:027133e2c23fd4ff467e66d928ab4a64f7fd7cb2f77acdb580c483f7389d22d7"
   name = "github.com/fsouza/go-dockerclient"
   packages = [
@@ -142,12 +150,12 @@
   version = "v1.1.1"
 
 [[projects]]
-  digest = "1:d56baf8f9ef8bcf6f7c00ed2411220f5e35cc4912076de12c5a41be722eee9ec"
+  digest = "1:64bcb3310b6f43db7f120e9ddd17098f298137d411bf3efaf1a656efbc159a06"
   name = "github.com/hashicorp/consul"
   packages = ["api"]
   pruneopts = "UT"
-  revision = "48d287ef690ada66634885640f3444dbf7b71d18"
-  version = "v1.2.3"
+  revision = "9ea1a204d832cfd4d8c5cba9df56876a526a4531"
+  version = "v1.7.2"
 
 [[projects]]
   digest = "1:f47d6109c2034cb16bd62b220e18afd5aa9d5a1630fe5d937ad96a4fb7cbb277"
@@ -158,12 +166,20 @@
   version = "v0.5.0"
 
 [[projects]]
-  branch = "master"
-  digest = "1:45aad874d3c7d5e8610427c81870fb54970b981692930ec2a319ce4cb89d7a00"
+  digest = "1:74ef51aaf7bf1adac39d90983a780094dc094d1a16ead8e9088e8b0a8b2f4d5c"
+  name = "github.com/hashicorp/go-hclog"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "ea00810e77bdfb95e93c28be25194796a3f6ced6"
+  version = "v0.12.1"
+
+[[projects]]
+  digest = "1:5c03dd01d17d6ed9aa1c490a2bfd270dab91d14e85b4640ebdb6511594a1accd"
   name = "github.com/hashicorp/go-rootcerts"
   packages = ["."]
   pruneopts = "UT"
-  revision = "6bb64b370b90e7ef1fa532be9e591a81c3493e00"
+  revision = "98fadc2a5ba2ad2a534a179b352ecdfd1f4259aa"
+  version = "v1.0.2"
 
 [[projects]]
   digest = "1:0dd7b7b01769f9df356dc99f9e4144bdbabf6c79041ea7c0892379c5737f3c44"
@@ -180,6 +196,22 @@
   pruneopts = "UT"
   revision = "5c8c8bd35d3832f5d134ae1e1e375b69a4d25242"
   version = "v1.0.1"
+
+[[projects]]
+  digest = "1:0109cf4321a15313ec895f42e723e1f76121c6975ea006abfa20012272ec0937"
+  name = "github.com/mattn/go-colorable"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "68e95eba382c972aafde02ead2cd2426a8a92480"
+  version = "v0.1.6"
+
+[[projects]]
+  digest = "1:0c58d31abe2a2ccb429c559b6292e7df89dcda675456fecc282fa90aa08273eb"
+  name = "github.com/mattn/go-isatty"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "7b513a986450394f7bbf1476909911b3aa3a55ce"
+  version = "v0.0.12"
 
 [[projects]]
   digest = "1:c182b8d45f3687b6c148eec6de90cda533ef58ee9e55a917a466597deec4878f"
@@ -282,7 +314,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:583f2f436bab7b59a7bd3e759f1375b06f460760ed1f9235604d143eaab83009"
+  digest = "1:33a9a278c2761a8a8ba5775f6937c9c3c2de9bfaee835f36ad93691d39ac48e6"
   name = "golang.org/x/crypto"
   packages = [
     "ed25519",
@@ -290,7 +322,7 @@
     "ssh/terminal",
   ]
   pruneopts = "UT"
-  revision = "e3636079e1a4c1f337f212cc5cd2aca108f6c900"
+  revision = "0ec3e9974c59449edd84298612e9f16fa13368e8"
 
 [[projects]]
   branch = "master"
